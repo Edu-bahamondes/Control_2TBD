@@ -19,6 +19,11 @@ const routes = [
         component: () => import('@/modules/tareas/views/FormularioTarea.vue'),
         meta: { requiresAuth: true }
     },
+    {
+        path: '/tareas/editar/:id',
+        component: () => import('@/modules/tareas/views/FormularioTarea.vue'),
+        meta: { requiresAuth: true }
+    },
 
     // Análisis
     {
