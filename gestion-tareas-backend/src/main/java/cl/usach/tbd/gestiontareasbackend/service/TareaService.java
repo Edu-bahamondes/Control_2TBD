@@ -64,6 +64,13 @@ public class TareaService {
         return convertirATareaResponse(actualizada);
     }
 
+    @Transactional(readOnly = true)
+    public TareaResponse obtenerPorId(Long idTarea) {
+        Tarea tarea = tareaRepository.findById(idTarea)
+                .orElseThrow(() -> new RuntimeException("Tarea no encontrada"));
+        return convertirATareaResponse(tarea);
+    }
+
     @Transactional
     public void eliminarTarea(Long idTarea) {
         if (!tareaRepository.existsById(idTarea)) {
@@ -119,8 +126,7 @@ public class TareaService {
         return resultados.stream()
                 .map(r -> new TareasPorSectorDTO(
                         (String) r.get("nombresector"),
-                        ((Number) r.get("cantidadtareas")).longValue()
-                ))
+                        ((Number) r.get("cantidadtareas")).longValue()))
                 .collect(Collectors.toList());
     }
 
@@ -149,8 +155,7 @@ public class TareaService {
                 (String) resultado.get("descripcion"),
                 (String) resultado.get("nombresector"),
                 ((Number) resultado.get("distanciakm")).doubleValue(),
-                fechaVencimiento
-        );
+                fechaVencimiento);
     }
 
     public SectorConTareasDTO sectorConMasTareasEn2Km(Long idUsuario) {
@@ -161,8 +166,7 @@ public class TareaService {
         return new SectorConTareasDTO(
                 (String) resultado.get("nombresector"),
                 ((Number) resultado.get("cantidadtareascompletadas")).longValue(),
-                ((Number) resultado.get("distanciakm")).doubleValue()
-        );
+                ((Number) resultado.get("distanciakm")).doubleValue());
     }
 
     public PromedioDistanciaDTO obtenerPromedioDistancia(Long idUsuario) {
@@ -171,8 +175,7 @@ public class TareaService {
 
         return new PromedioDistanciaDTO(
                 promedio != null ? promedio : 0.0,
-                totalCompletadas != null ? totalCompletadas : 0L
-        );
+                totalCompletadas != null ? totalCompletadas : 0L);
     }
 
     public List<ConcentracionTareasDTO> concentracionTareasPendientes() {
@@ -182,8 +185,7 @@ public class TareaService {
                         (String) r.get("nombresector"),
                         ((Number) r.get("cantidadtareaspendientes")).longValue(),
                         ((Number) r.get("latitud")).doubleValue(),
-                        ((Number) r.get("longitud")).doubleValue()
-                ))
+                        ((Number) r.get("longitud")).doubleValue()))
                 .collect(Collectors.toList());
     }
 
@@ -195,8 +197,7 @@ public class TareaService {
         return new SectorConTareasDTO(
                 (String) resultado.get("nombresector"),
                 ((Number) resultado.get("cantidadtareascompletadas")).longValue(),
-                ((Number) resultado.get("distanciakm")).doubleValue()
-        );
+                ((Number) resultado.get("distanciakm")).doubleValue());
     }
 
     private TareaResponse convertirATareaResponse(Tarea tarea) {
@@ -209,7 +210,6 @@ public class TareaService {
                 tarea.getUsuario().getIdUsuario(),
                 tarea.getUsuario().getNombreUsuario(),
                 tarea.getSector().getIdSector(),
-                tarea.getSector().getNombre()
-        );
+                tarea.getSector().getNombre());
     }
 }

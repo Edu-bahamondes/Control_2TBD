@@ -28,8 +28,7 @@ public class TareaController {
     @PostMapping
     public ResponseEntity<?> crearTarea(
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody TareaRequest request
-    ) {
+            @RequestBody TareaRequest request) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             TareaResponse tarea = tareaService.crearTarea(idUsuario, request);
@@ -42,10 +41,19 @@ public class TareaController {
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarTarea(
             @PathVariable Long id,
-            @RequestBody TareaRequest request
-    ) {
+            @RequestBody TareaRequest request) {
         try {
             TareaResponse tarea = tareaService.actualizarTarea(id, request);
+            return ResponseEntity.ok(tarea);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerTarea(@PathVariable Long id) {
+        try {
+            TareaResponse tarea = tareaService.obtenerPorId(id);
             return ResponseEntity.ok(tarea);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -72,14 +80,14 @@ public class TareaController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body(Map.of("error", "Error interno del servidor: " + e.getMessage()));
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Error interno del servidor: " + e.getMessage()));
         }
     }
 
     @GetMapping
     public ResponseEntity<?> obtenerTareas(
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             List<TareaResponse> tareas = tareaService.obtenerTareasDeUsuario(idUsuario);
@@ -92,8 +100,7 @@ public class TareaController {
     @GetMapping("/estado/{estado}")
     public ResponseEntity<?> obtenerTareasPorEstado(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable String estado
-    ) {
+            @PathVariable String estado) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             List<TareaResponse> tareas = tareaService.obtenerTareasPorEstado(idUsuario, estado);
@@ -106,8 +113,7 @@ public class TareaController {
     @GetMapping("/buscar")
     public ResponseEntity<?> buscarTareas(
             @RequestHeader("Authorization") String authHeader,
-            @RequestParam String keyword
-    ) {
+            @RequestParam String keyword) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             List<TareaResponse> tareas = tareaService.buscarTareasPorPalabraClave(idUsuario, keyword);
@@ -120,8 +126,7 @@ public class TareaController {
     @GetMapping("/proximas-vencer")
     public ResponseEntity<?> obtenerTareasProximasAVencer(
             @RequestHeader("Authorization") String authHeader,
-            @RequestParam(defaultValue = "7") int dias
-    ) {
+            @RequestParam(defaultValue = "7") int dias) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             List<TareaResponse> tareas = tareaService.obtenerTareasProximasAVencer(idUsuario, dias);
@@ -135,8 +140,7 @@ public class TareaController {
 
     @GetMapping("/analisis/por-sector")
     public ResponseEntity<?> contarTareasPorSector(
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             List<TareasPorSectorDTO> resultado = tareaService.contarTareasPorSector(idUsuario);
@@ -148,8 +152,7 @@ public class TareaController {
 
     @GetMapping("/analisis/mas-cercana")
     public ResponseEntity<?> obtenerTareaMasCercana(
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             TareaCercanaDTO resultado = tareaService.obtenerTareaMasCercana(idUsuario);
@@ -161,8 +164,7 @@ public class TareaController {
 
     @GetMapping("/analisis/sector-mas-tareas-2km")
     public ResponseEntity<?> sectorConMasTareasEn2Km(
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             SectorConTareasDTO resultado = tareaService.sectorConMasTareasEn2Km(idUsuario);
@@ -174,8 +176,7 @@ public class TareaController {
 
     @GetMapping("/analisis/promedio-distancia")
     public ResponseEntity<?> obtenerPromedioDistancia(
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             PromedioDistanciaDTO resultado = tareaService.obtenerPromedioDistancia(idUsuario);
@@ -197,8 +198,7 @@ public class TareaController {
 
     @GetMapping("/analisis/sector-mas-tareas-5km")
     public ResponseEntity<?> sectorConMasTareasEn5Km(
-            @RequestHeader("Authorization") String authHeader
-    ) {
+            @RequestHeader("Authorization") String authHeader) {
         try {
             Long idUsuario = obtenerIdUsuarioDesdeToken(authHeader);
             SectorConTareasDTO resultado = tareaService.sectorConMasTareasEn5Km(idUsuario);
